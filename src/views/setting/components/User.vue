@@ -11,11 +11,11 @@
           {{ getRoleName(row.role) }}
         </template>
       </el-table-column>
-      <el-table-column prop="email" label="邮箱" min-width="120" />
-      <el-table-column prop="introduction" label="介绍" />
-      <el-table-column prop="avatar" label="头像">
+      <el-table-column prop="phone" label="手机号" min-width="120" />
+      <el-table-column prop="introduce" label="介绍" />
+      <el-table-column prop="headImg" label="头像">
         <template #default="{ row }">
-          <img v-show="row.avatar" :src="row.avatar" width="40" height="40" />
+          <img v-show="row.headImg" :src="row.headImg" width="40" height="40" />
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" min-width="160">
@@ -43,11 +43,11 @@
             <el-option v-for="item in roleList" :key="item.name" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="email" label="邮箱">
-          <el-input v-model="userForm.email"></el-input>
+        <el-form-item prop="phone" label="手机号">
+          <el-input v-model="userForm.phone"></el-input>
         </el-form-item>
-        <el-form-item prop="introduction" label="介绍">
-          <el-input v-model="userForm.introduction"></el-input>
+        <el-form-item prop="introduce" label="介绍">
+          <el-input v-model="userForm.introduce"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -77,8 +77,8 @@ const userForm = reactive({
   username: '',
   password: '',
   role: '',
-  email: '',
-  introduction: ''
+  phone: '',
+  introduce: ''
 })
 
 onBeforeMount(() => {
@@ -93,8 +93,11 @@ const getTableList = () => {
   tabelLoading.value = true
   get_user_list()
     .then((res) => {
-      tableList.length = 0
-      tableList.push(...res.list)
+      tableList.length = 0;
+      const list = res.list;
+      tableList.push(...list);
+      console.log('用户列表', list);
+
     })
     .finally(() => {
       tabelLoading.value = false
@@ -139,6 +142,7 @@ const showDialog = (flag, row) => {
       userForm[key] = ''
     }
   }
+  console.log(userForm);
 }
 
 /**
@@ -147,8 +151,10 @@ const showDialog = (flag, row) => {
 const addOrUpdateUser = () => {
   formLoading.value = true
   if (dialogFlag.value === 2) {
+    console.log(userForm);
     update_user_info({ ...userForm })
-      .then(() => {
+      .then((res) => {
+        console.log('更新成功', res);
         getTableList()
         dialogVisible.value = false
       })
@@ -156,7 +162,15 @@ const addOrUpdateUser = () => {
         formLoading.value = false
       })
   } else {
-    add_user({ ...userForm })
+    
+    add_user({
+      username: userForm.username,
+      password: userForm.password,
+      phone: userForm.phone,
+      role: userForm.role,
+      introduce: userForm.introduce,
+      headImg: 'https://v2.cn.vuejs.org/images/logo.svg',
+    })
       .then(() => {
         getTableList()
         dialogVisible.value = false
@@ -177,8 +191,8 @@ const deleteUser = (row) => {
     type: 'warning'
   })
     .then(() => {
-      delete_user_info(row.username).then(() => {
-        const index = tableList.findIndex((o) => o.username === row.username)
+      delete_user_info({ _id: row._id }).then(() => {
+        const index = tableList.findIndex((o) => o._id === row._id)
         tableList.splice(index, 1)
         ElMessage({
           type: 'success',

@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+// import localStorage froIgetItemm 'js-cookie';
 
 const TokenKey = 'token'
 const RoleKey = 'roles'
@@ -6,49 +6,49 @@ const nameKey = 'name'
 const avatarKey = 'avatar'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  return localStorage.getItem(TokenKey)
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  return localStorage.setItem(TokenKey, token)
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  return localStorage.removeItem(TokenKey)
 }
 
 export function getRoles() {
-  return Cookies.get(RoleKey)
+  return localStorage.getItem(RoleKey)
 }
 
 export function setRoles(role) {
-  return Cookies.set(RoleKey, role)
+  return localStorage.setItem(RoleKey, role)
 }
 
 export function removeRoles() {
-  return Cookies.remove(RoleKey)
+  return localStorage.removeItem(RoleKey)
 }
 
 export function getName() {
-  return Cookies.get(nameKey)
+  return localStorage.getItem(nameKey)
 }
 
 export function setName(name) {
-  return Cookies.set(nameKey, name)
+  return localStorage.setItem(nameKey, name)
 }
 
 export function removeName() {
-  return Cookies.remove(nameKey)
+  return localStorage.removeItem(nameKey)
 }
 
 export function getAvatar() {
-  return Cookies.get(avatarKey)
+  return localStorage.getItem(avatarKey)
 }
 
 export function setAvatar(avatar) {
-  return Cookies.set(avatarKey, avatar)
+  return localStorage.setItem(avatarKey, avatar)
 }
 
 export function removeAvatar() {
-  return Cookies.remove(avatarKey)
+  return localStorage.removeItem(avatarKey)
 }

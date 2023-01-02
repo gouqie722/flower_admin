@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 import { getToken, removeToken, removeRoles, removeName, removeAvatar } from './auth'
 
 const service = axios.create({
-  // baseURL: import.meta.env.VITE_BASE_API,
+  baseURL: 'http://localhost:3000',
   timeout: 10000 // request timeout
 })
 
@@ -13,7 +13,8 @@ service.interceptors.request.use(
     const token = getToken()
     // 如果有token 就携带tokon
     if (token) {
-      config.headers['Authorization'] = 'Bearer__' + token
+      // config.headers['Authorization'] = 'Bearer__' + token
+      config.headers['token'] = token;
     }
     // 加上取消请求
     config.cancelToken = new axios.CancelToken((cancel) => {
@@ -30,7 +31,16 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    // console.log('响应拦截', response);
+    // if (response.data.code !== 0) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: response.data.msg,
+    //   })
+    // }
+    return response.data.data;
+  },
   (error) => {
     if (error.response && error.response.status === 401) {
       removeToken()

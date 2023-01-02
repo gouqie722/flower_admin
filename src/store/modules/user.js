@@ -47,12 +47,14 @@ const actions = {
     return new Promise((resolve, reject) => {
       user_login(userInfo)
         .then((res) => {
+          const { _doc } = res;
+          console.log('300 登录', res, _doc);
           if (res.token) {
             commit('SET_TOKEN', res.token)
-            commit('SET_ROLES', res.role)
-            commit('SET_NAME', res.username)
-            commit('SET_AVATAR', res.avatar)
-            commit('SET_INTRODUCTION', res.introduction)
+            commit('SET_ROLES', _doc.role)
+            commit('SET_NAME', _doc.username)
+            commit('SET_AVATAR', _doc.headImg)
+            commit('SET_INTRODUCTION', _doc.introduction)
             ElMessage({
               type: 'success',
               message: res.message
@@ -74,7 +76,7 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      user_logout(state.token)
+      user_logout()
         .then((res) => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', '')

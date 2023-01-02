@@ -37,6 +37,7 @@ const opened = computed(() => store.state.app.sidebar.opened)
 const isCollapse = computed(() => !opened.value)
 
 onMounted(() => {
+  console.log(routerList, '路由列表', constantRoutes, roles);
   filterRoutes()
 })
 
