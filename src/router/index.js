@@ -87,6 +87,18 @@ export const constantRoutes = [
         name: 'Xueyue',
         meta: { title: '雪月', icon: 'Flag', roles: ['admin'] },
       },
+      {
+        path: '/add',
+        component: () => import('@/views/add/index.vue'),
+        name: 'add',
+        meta: { title: '添加商品', icon: 'Plus', roles: ['admin'] },
+      },
+      {
+        path: '/order',
+        component: () => import('@/views/order.vue'),
+        name: 'order',
+        meta: { title: '订单管理', icon: 'Document', roles: ['admin'] },
+      },
     ],
   },
 ];
