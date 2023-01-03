@@ -94,6 +94,12 @@ export const constantRoutes = [
         meta: { title: '添加商品', icon: 'Plus', roles: ['admin'] },
       },
       {
+        path: '/good',
+        component: () => import('@/views/good/index.vue'),
+        name: 'good',
+        meta: { title: '商品管理', icon: 'Sell', roles: ['admin'] },
+      },
+      {
         path: '/order',
         component: () => import('@/views/order.vue'),
         name: 'order',
