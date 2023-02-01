@@ -23,6 +23,7 @@
         </div>
         <p class="login-tips">用户名: admin 密码: 123</p>
         <p class="login-tips">用户名: editor 密码: 456</p>
+        <router-link to="/register">注册</router-link>
       </el-form>
     </div>
   </div>

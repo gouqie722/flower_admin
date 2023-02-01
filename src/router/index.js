@@ -9,6 +9,10 @@ export const constantRoutes = [
     }
   },
   {
+    path: '/register',
+    component: () => import('@/views/register/index.vue'),
+  },
+  {
     path: '/404',
     component: () => import('@/views/error-page/404.vue'),
     meta: {

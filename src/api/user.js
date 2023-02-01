@@ -14,6 +14,19 @@ export function user_login(data) {
 }
 
 /**
+ * 注册
+ * @param {*} data 
+ * @returns 
+ */
+export function user_register(data) {
+  return request({
+    url: '/api/user/register',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 登出
  * @param {*} params
  * @returns
