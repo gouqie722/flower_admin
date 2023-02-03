@@ -25,7 +25,7 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { constantRoutes } from '@/router'
+import { constantRoutes as routes } from '@/router'
 import { getRoles } from '@/utils/auth'
 import SidebarItem from './SidebarItem.vue'
 
@@ -36,10 +36,30 @@ const routerList = reactive([])
 const opened = computed(() => store.state.app.sidebar.opened)
 const isCollapse = computed(() => !opened.value)
 
+
+
 onMounted(() => {
-  console.log(routerList, '路由列表', constantRoutes, roles);
+  console.log(routerList, '路由列表', routes, roles);
   filterRoutes()
 })
+
+function formatPath(list) {
+  if (!list) {
+    return;
+  }
+  return list.map(item => {
+    item.path = item.path.replace('/:id', '');
+    if (item.children) {
+      item.children = formatPath(item.children);
+    }
+    return item;
+  });
+}
+console.log(formatPath(routes));
+const constantRoutes = formatPath(routes);
+// const constantRoutes = routes.map(route => {
+//   route
+// });
 
 /**
  * 权限过滤路由
