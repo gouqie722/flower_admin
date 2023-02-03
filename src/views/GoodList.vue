@@ -4,7 +4,7 @@
       v-for="(item, index) in list"
       :key="item._id"
       :span="5"
-      :offset="index > 0 ? 1 : 0"
+      :offset="index % 4 !== 0 ? 1 : 0"
     >
       <ElCard :body-style="{ padding: '0px' }">
         <img
