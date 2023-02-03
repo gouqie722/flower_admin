@@ -92,7 +92,7 @@ export const constantRoutes = [
         meta: { title: '雪月', icon: 'Flag', roles: ['admin'] },
       },
       {
-        path: '/add/:id',
+        path: '/add',
         component: () => import('@/views/add/index.vue'),
         name: 'add',
         meta: { title: '添加商品', icon: 'Plus', roles: ['admin'] },

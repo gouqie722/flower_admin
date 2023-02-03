@@ -30,7 +30,7 @@ router.beforeEach(async (to, from, next) => {
       done()
     } else {
       const roles = getRoles()
-      const routes = router.getRoutes().filter((r) => r.path === to.path)
+      const routes = router.getRoutes().filter((r) => r.path === to.path || /^\/add/)
       if (routes.length) {
         // Permission filtering
         const toRoute = routes[0]

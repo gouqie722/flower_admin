@@ -1,10 +1,9 @@
-import Cookies from 'js-cookie'
 
 const state = {
   device: 'desktop',
-  size: Cookies.get('size') || 'medium',
+  size: localStorage.getItem('size') || 'medium',
   sidebar: {
-    opened: Cookies.get('sidebarStatus') ? !!Cookies.get('sidebarStatus') : true,
+    opened: localStorage.getItem('sidebarStatus') ? !!localStorage.getItem('sidebarStatus') : true,
     withoutAnimation: false
   }
 }
@@ -14,22 +13,22 @@ const mutations = {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
-      Cookies.set('sidebarStatus', '1')
+      localStorage.setItem('sidebarStatus', '1')
     } else {
-      Cookies.set('sidebarStatus', '')
+      localStorage.setItem('sidebarStatus', '')
     }
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {
     state.sidebar.opened = false
     state.sidebar.withoutAnimation = withoutAnimation
-    Cookies.set('sidebarStatus', '')
+    localStorage.setItem('sidebarStatus', '')
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
   },
   SET_SIZE: (state, size) => {
     state.size = size
-    Cookies.set('size', size)
+    localStorage.setItem('size', size)
   }
 }
 

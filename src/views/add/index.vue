@@ -70,8 +70,8 @@
 <script>
 import { ElCard, ElOption, ElRate, ElSelect, ElMessage } from 'element-plus';
 import { onMounted, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-import { getFlowerTypes, addFlower } from '../../api/folwer';
+import { useRouter, useRoute } from 'vue-router';
+import { getFlowerTypes, addFlower } from '../../api/flower';
 import { getToken } from '../../utils/auth';
 
 export default {
@@ -96,6 +96,7 @@ export default {
             ],
         });
         const router = useRouter();
+        const route = useRoute();
         async function init() {
             const res = await getFlowerTypes();
             const { list } = res;
@@ -123,8 +124,8 @@ export default {
           console.log('添加成功', res);
         }
         onMounted(() => {
-          console.log(state);
-            init();
+          console.log(state, route.query);
+          init();
         });
         return {
           state,

@@ -80,7 +80,7 @@
 <script>
 import { ElButton, ElCard, ElTable } from 'element-plus';
 import { onMounted, ref } from 'vue'
-import { getList } from '../../api/folwer';
+import { getList } from '../../api/flower';
 
 export default {
     setup() {
