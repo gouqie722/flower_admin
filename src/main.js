@@ -28,8 +28,8 @@ import Icon from './components/Icon.vue';
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-const { mockXHR } = require('../mock')
-mockXHR()
+// const { mockXHR } = require('../mock')
+// mockXHR()
 
 const app = createApp(App)
 

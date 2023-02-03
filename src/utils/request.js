@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import router from '../router'
 import { getToken, removeToken, removeRoles, removeName, removeAvatar } from './auth'
 
 const service = axios.create({
@@ -40,6 +41,9 @@ service.interceptors.response.use(
     //     message: response.data.msg,
     //   })
     // }
+    if (response.data.code === 403) {
+      router.push('/login');
+    }
     return response.data.data;
   },
   (error) => {

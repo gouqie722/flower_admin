@@ -92,7 +92,7 @@ export const constantRoutes = [
         meta: { title: '雪月', icon: 'Flag', roles: ['admin'] },
       },
       {
-        path: '/add',
+        path: '/add/:id',
         component: () => import('@/views/add/index.vue'),
         name: 'add',
         meta: { title: '添加商品', icon: 'Plus', roles: ['admin'] },
@@ -108,6 +108,18 @@ export const constantRoutes = [
         component: () => import('@/views/order.vue'),
         name: 'order',
         meta: { title: '订单管理', icon: 'Document', roles: ['admin'] },
+      },
+      {
+        path: '/good_list',
+        component: () => import('@/views/GoodList.vue'),
+        name: 'good_list',
+        meta: { title: '商品列表', icon: 'Goods', roles: ['admin', 'editor'] },
+      },
+      {
+        path: '/shopping_cart',
+        component: () => import('@/views/ShoppingCart.vue'),
+        name: 'shopping_cart',
+        meta: { title: '购物车', icon: 'ShoppingCart', roles: ['admin', 'editor'] },
       },
     ],
   },
