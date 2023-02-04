@@ -1,4 +1,8 @@
 <template>
+  <div class="cart">
+    <el-button icon="ShoppingCart" size="large" circle :type="total ? 'primary' : ''" class="shopping_cart" />
+    <div class="total">{{ total }}</div>
+  </div>
   <ElRow>
     <ElCol
       v-for="(item, index) in list"
@@ -12,46 +16,73 @@
           class="image"
         />
         <div style="padding: 14px">
-          <span>Yummy hamburger</span>
+          <span class="name">{{ item.name }}</span>
+          <div class="hot">热门程度：<ElRate disabled v-model="item.hot"></ElRate></div>
           <div class="bottom">
             <time class="time">{{ format(item.putTime) }}</time>
-            <ElButton text class="button">Operating</ElButton>
           </div>
         </div>
+        <ElInputNumber v-model="item.num" :min="0" :max="10" @change="handleChange" />
+        <ElButton type="primary" icon="Plus" class="button" @click="handleAddShoppingCart(index)">添加到购物车</ElButton>
       </ElCard>
     </ElCol>
   </ElRow>
 </template>
 <script>
-import { ElButton, ElCard, ElCol } from 'element-plus';
+import { ElButton, ElCard, ElCol, ElInputNumber } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { getList } from '../api/flower.js';
+import { addCart } from '../api/cart.js';
 import { format } from '../utils/date.js';
 export default {
   setup() {
     const list = ref([]);
+    const total = ref(0);
     onMounted(async () => {
       const res = await getList({});
       if (res) {
-        list.value = res.list;
+        list.value = res.list.map(item => ({ ...item, num: 0 }));
       }
       console.log(res, "列表");
     });
-
+    function handleChange(num) {
+      // console.log(num);
+    }
+    async function handleAddShoppingCart(index) {
+      const item = list.value[index];
+      if (!item.num) {
+        return;
+      }
+      console.log(item.num, item._id);
+      const res = await addCart({
+        num: item.num,
+        flowerId: item._id,
+      });
+      console.log('添加成功', res);
+    }
     const currentDate = ref(new Date())
     return {
       currentDate,
       list,
+      total,
       format,
+      handleChange,
+      handleAddShoppingCart,
     }
   },
-  components: { ElCol, ElCard, ElButton }
+  components: { ElCol, ElCard, ElButton, ElInputNumber }
 }
 </script>
 <style lang="less">
 .time {
   font-size: 12px;
   color: #999;
+}
+
+.total {
+  position: absolute;
+  top: 2px;
+  right: 6px;
 }
 
 .bottom {
@@ -63,12 +94,27 @@ export default {
 }
 
 .button {
-  padding: 0;
+  // padding: 0;
   min-height: auto;
 }
 
 .image {
   width: 100%;
   display: block;
+}
+.hot {
+  font-size: 16px;
+}
+.name {
+  font-size: 20px;
+  font-weight: bold;
+}
+.cart {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
+.el-button--large.is-circle.shopping_cart {
+  padding: 24px;
 }
 </style>
