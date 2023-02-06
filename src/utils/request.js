@@ -4,8 +4,8 @@ import router from '../router'
 import { getToken, removeToken, removeRoles, removeName, removeAvatar } from './auth'
 
 const service = axios.create({
-  baseURL: 'http://localhost:3000',
-  // baseURL: 'http://39.108.186.101:3000',
+  // baseURL: 'http://localhost:3000',
+  baseURL: 'http://39.108.186.101:3000',
   timeout: 10000 // request timeout
 })
 
@@ -43,6 +43,7 @@ service.interceptors.response.use(
     // }
     if (response.data.code === 403) {
       router.push('/login');
+      return;
     }
     return response.data.data;
   },

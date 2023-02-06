@@ -159,4 +159,9 @@ export default {
   border: 1px solid #e9e9e9;
   padding: 32px 17px;
 }
+.avatar-uploader .avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
 </style>

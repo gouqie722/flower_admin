@@ -1,7 +1,7 @@
 <template>
   <div class="user-manage-view">
     <div class="header-box">
-      <el-button type="primary" icon="Plus" @click="showDialog">添加用户</el-button>
+      <ElButton type="primary" icon="Plus" @click="showDialog">添加用户</ElButton>
     </div>
     <el-table v-loading="tabelLoading" border :data="tableList">
       <el-table-column prop="username" label="账号" />
@@ -25,8 +25,8 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template #default="{ row }">
-          <el-button type="primary" size="small" icon="Edit" @click="showDialog(2, row)">修改</el-button>
-          <el-button type="danger" size="small" icon="Delete" @click="deleteUser(row)">删除</el-button>
+          <ElButton type="primary" size="small" icon="Edit" @click="showDialog(2, row)">修改</ElButton>
+          <ElButton type="danger" size="small" icon="Delete" @click="deleteUser(row)">删除</ElButton>
         </template>
       </el-table-column>
     </el-table>
@@ -49,11 +49,22 @@
         <el-form-item prop="introduce" label="介绍">
           <el-input v-model="userForm.introduce"></el-input>
         </el-form-item>
+        <el-form-item prop="headImg" label="头像">
+          <el-upload
+            class="avatar-uploader"
+            action="http://39.108.186.101:3000/api/upload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+          >
+          <img v-if="userForm.headImg" :src="userForm.headImg" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" :disabled="formLoading" @click="addOrUpdateUser">确 定</el-button>
+          <ElButton @click="dialogVisible = false">取 消</ElButton>
+          <ElButton type="primary" :disabled="formLoading" @click="addOrUpdateUser">确 定</ElButton>
         </span>
       </template>
     </el-dialog>
@@ -78,13 +89,21 @@ const userForm = reactive({
   password: '',
   role: '',
   phone: '',
-  introduce: ''
+  introduce: '',
+  headImg: '',
 })
 
 onBeforeMount(() => {
   getTableList()
   getRoles()
 })
+
+
+function handleUrlSuccess(e) {
+  console.log('上传成功', e);
+  const { filepath } = e.data;
+  userForm.headImg = filepath;
+}
 
 /**
  * 获取表格列表
@@ -169,7 +188,7 @@ const addOrUpdateUser = () => {
       phone: userForm.phone,
       role: userForm.role,
       introduce: userForm.introduce,
-      headImg: 'https://v2.cn.vuejs.org/images/logo.svg',
+      headImg: userForm.headImg,
     })
       .then(() => {
         getTableList()
@@ -204,8 +223,39 @@ const deleteUser = (row) => {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .header-box {
   margin-bottom: 10px;
+}
+.avatar-uploader {
+  width: 100px;
+  height: 100px;
+  color: #ddd;
+  font-size: 30px;
+}
+.avatar-uploader .avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  text-align: center;
 }
 </style>
