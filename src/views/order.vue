@@ -12,9 +12,9 @@
         <el-select @change="handleOption" v-model="state.orderStatus" style="width: 200px; margin-right: 10px">
           <el-option
             v-for="item in state.options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.type"
+            :label="item.v"
+            :value="item.type"
           />
         </el-select>
         <!-- <el-button type="primary" size="small" icon="el-icon-edit">修改订单</el-button> -->
@@ -39,16 +39,16 @@
       >
       </el-table-column>
       <el-table-column
-        prop="totalPrice"
+        prop="total"
         label="订单总价"
       >
       </el-table-column>
       <el-table-column
-        prop="orderStatus"
+        prop="status"
         label="订单状态"
       >
         <template #default="scope">
-          <span>{{ $filters.orderMap(scope.row.orderStatus) }}</span>
+          <span>{{ statusMap[scope.row.status] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -119,9 +119,11 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { HomeFilled, Delete } from '@element-plus/icons-vue'
+import { HomeFilled, Delete } from '@element-plus/icons-vue';
+import { getOrderList, getAllStatus } from '../api/order';
+
 
 const state = reactive({
   loading: false,
@@ -133,41 +135,38 @@ const state = reactive({
   orderNo: '', // 订单号
   orderStatus: '', // 订单状态
   // 订单状态筛选项默认值
-  options: [{
-    value: '',
-    label: '全部'
-  }, {
-    value: 0,
-    label: '待支付'
-  }, {
-    value: 1,
-    label: '已支付'
-  }, {
-    value: 2,
-    label: '配货完成'
-  }, {
-    value: 3,
-    label: '出库成功'
-  }, {
-    value: 4,
-    label: '交易成功'
-  }, {
-    value: -1,
-    label: '手动关闭'
-  }, {
-    value: -2,
-    label: '超时关闭'
-  }, {
-    value: -3,
-    label: '商家关闭'
-  }]
+  options: [],
 });
+
+const statusMap = ref({});
+
+async function getList() {
+  state.loading = true;
+  const res = await getOrderList();
+  state.loading = false;
+  console.log('订单列表', res);
+  state.tableData = res.list;
+}
+
+async function allStatus() {
+  const res = await getAllStatus();
+  const { list } = res;
+  list.forEach(item => {
+    statusMap.value[item.type] = item.v;
+  });
+  console.log('订单状态', res, statusMap);
+  state.options = list;
+}
+
 // 初始化获取订单列表
 onMounted(() => {
-  // getOrderList()
+  allStatus();
+  getList();
 })
 </script>
 
 <style>
-
+a {
+  color: #409eff;
+}
 </style>

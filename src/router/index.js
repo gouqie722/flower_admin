@@ -107,7 +107,12 @@ export const constantRoutes = [
         path: '/order',
         component: () => import('@/views/order.vue'),
         name: 'order',
-        meta: { title: '订单管理', icon: 'Document', roles: ['admin'] },
+        meta: { title: '订单管理', icon: 'Document', roles: ['admin', 'editor'] },
+      },
+      {
+        path: '/order_detail',
+        component: () => import('@/views/OrderDetail.vue'),
+        name: 'order_detail',
       },
       {
         path: '/good_list',

@@ -14,7 +14,7 @@
           </template>
         </ElPopconfirm>
         <div style="flex-grow: 1;"></div>
-        <ElButton type="success" :disabled="!selectList.length" :icon="Plus" @click="handleAdd">结算</ElButton>
+        <ElButton type="success" :disabled="!selectList.length" :icon="Plus" @click="handleSettlement">结算</ElButton>
       </div>
     </template>
     <ElTable
@@ -113,6 +113,7 @@ import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getCartList, requestChangeNum, deleteCartItem } from '../api/cart.js';
+import { createOrder } from '../api/order';
 import { format } from '../utils/date.js';
 
 const router = useRouter()
@@ -155,9 +156,23 @@ async function handleChange(e) {
 }
 
 async function handleDeleteOne(_id) {
-  const res = await deleteCartItem({ _id });
+  const res = await deleteCartItem({ _ids: [_id] });
   getList();
   console.log('删除成功', res);
+}
+
+async function handleSettlement() {
+  console.log(selectList.value);
+  const flowers = selectList.value.map(item => {
+    return {
+      id: item.flowerId,
+      num: item.num,
+      price: Number(item.price),
+    }
+  })
+  const res = await createOrder({ flowers });
+  console.log('创建成功', res);
+  getList();
 }
 // 初始化
 onMounted(() => {
