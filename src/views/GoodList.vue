@@ -29,7 +29,7 @@
   </ElRow>
 </template>
 <script>
-import { ElButton, ElCard, ElCol, ElInputNumber } from 'element-plus';
+import { ElButton, ElCard, ElCol, ElInputNumber, ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { getList } from '../api/flower.js';
 import { addCart } from '../api/cart.js';
@@ -58,6 +58,7 @@ export default {
         num: item.num,
         flowerId: item._id,
       });
+      ElMessage.success('已添加到购物车');
       console.log('添加成功', res);
     }
     const currentDate = ref(new Date())

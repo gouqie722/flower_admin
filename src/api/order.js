@@ -23,3 +23,11 @@ export function getAllStatus() {
     method: 'GET',
   });
 }
+
+export function cancelOrder(data) {
+  return request({
+    url: '/api/order/cancel',
+    method: 'POST',
+    data
+  });
+}

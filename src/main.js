@@ -15,6 +15,8 @@ import Directives from './directive'
 // permission control
 import './permission'
 
+// import './test'
+
 // utils
 import { DateFormat } from '@/utils/util'
 

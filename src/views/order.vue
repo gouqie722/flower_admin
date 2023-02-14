@@ -95,7 +95,7 @@
           <el-popconfirm
             v-if="!(scope.row.orderStatus == 4 || scope.row.orderStatus < 0)"
             title="确定关闭订单吗？"
-            @confirm="handleClose(scope.row.orderId)"
+            @confirm="handleClose(scope.row._id)"
             confirm-button-text="确定"
             cancel-button-text="取消"
           >
@@ -103,7 +103,7 @@
               <a style="cursor: pointer; margin-right: 10px">关闭订单</a>
             </template>
           </el-popconfirm>
-          <router-link :to="{ path: '/order_detail', query: { id: scope.row.orderId }}">订单详情</router-link>
+          <router-link :to="{ path: '/order_detail', query: { id: scope.row._id }}">订单详情</router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -122,7 +122,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { HomeFilled, Delete } from '@element-plus/icons-vue';
-import { getOrderList, getAllStatus } from '../api/order';
+import { getOrderList, getAllStatus, cancelOrder } from '../api/order';
 
 
 const state = reactive({
@@ -156,6 +156,12 @@ async function allStatus() {
   });
   console.log('订单状态', res, statusMap);
   state.options = list;
+}
+
+async function handleClose(id) {
+  const res = await cancelOrder({ id });
+  console.log('取消成功', res);
+  console.log(id);
 }
 
 // 初始化获取订单列表
