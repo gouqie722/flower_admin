@@ -56,12 +56,13 @@
 
       <ElTableColumn
         label="操作"
-        width="100"
+        width="140"
       >
         <template #default="scope">
           <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row._id)">修改</a>
-          <a style="cursor: pointer; margin-right: 10px" v-if="scope.row.lower === '01'" @click="handleStatus(scope.row._id, 1)">下架</a>
-          <a style="cursor: pointer; margin-right: 10px" v-else @click="handleStatus(scope.row._id, 0)">上架</a>
+          <a style="cursor: pointer; margin-right: 10px" @click="handleDelete(scope.row._id)">删除</a>
+          <a style="cursor: pointer; margin-right: 10px" v-if="scope.row.lower === '01'" @click="handleChangeStatus(scope.row._id, '00')">下架</a>
+          <a style="cursor: pointer; margin-right: 10px" v-else @click="handleChangeStatus(scope.row._id, '01')">上架</a>
         </template>
       </ElTableColumn>
     </ElTable>
@@ -78,14 +79,16 @@
 </template>
 
 <script>
-import { ElButton, ElCard, ElTable } from 'element-plus';
+import { ElButton, ElCard, ElTable, ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue'
-import { getList } from '../../api/flower';
+import { useRouter } from 'vue-router';
+import { getList, deleteFlower, changeFlowerStatus } from '../../api/flower';
 
 export default {
     setup() {
         const list = ref([]);
         const loading = ref(false);
+        const router = useRouter();
         async function requestList() {
             loading.value = true;
             const res = await getList({});
@@ -93,10 +96,32 @@ export default {
             console.log(res, "列表");
             list.value = res.list || [];
         }
+        function handleEdit(id) {
+          console.log(id);
+          router.push('/add?id=' + id);
+        }
+        async function handleDelete(id) {
+          const res = await deleteFlower({ id });
+          console.log('删除成功', res);
+          ElMessage({
+            message: '删除成功',
+            type: 'success',
+          });
+          requestList();
+        }
+        async function handleChangeStatus(id, lower) {
+          const res = await changeFlowerStatus({ lower, id });
+          console.log('状态更改成功', res);
+          ElMessage({
+            message: lower === '01' ? '已上架' : '已下架',
+            type: lower === '01' ? 'success' : 'error',
+          });
+          requestList();
+        }
         onMounted(() => {
-            requestList();
+          requestList();
         });
-        return { loading, list };
+        return { loading, list, handleEdit, handleDelete, handleChangeStatus };
     },
     components: { ElCard, ElButton, ElTable }
 }

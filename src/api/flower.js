@@ -33,3 +33,48 @@ export function getList(data) {
     data
   })
 }
+
+/**
+ * 详情
+ */
+export function getDetail(id) {
+  return request({
+    url: '/api/flower/detail/' + id,
+    method: 'GET',
+  })
+}
+
+/**
+ * 删除
+ */
+export function deleteFlower(data) {
+  return request({
+    url: '/api/flower/delete',
+    method: 'POST',
+    data,
+  });
+}
+
+/**
+ * 更新
+ * @param {*} data 
+ * @returns 
+ */
+export function updateFlower(data) {
+  return request({
+    url: '/api/flower/update',
+    method: 'POST',
+    data,
+  });
+}
+
+/**
+ * 更改状态
+ */
+export function changeFlowerStatus(data) {
+  return request({
+    url: '/api/flower/upper_or_lower',
+    method: 'POST',
+    data,
+  });
+}

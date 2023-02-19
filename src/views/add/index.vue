@@ -60,7 +60,7 @@
           <el-input style="width: 300px" type="textarea" v-model="state.goodForm.describe" placeholder="请输入商品简介(100字)"></el-input>
         </el-form-item> -->
         <el-form-item>
-          <el-button type="primary" @click="submitAdd()">{{ state.id ? '立即修改' : '立即创建' }}</el-button>
+          <el-button type="primary" @click="submit()">{{ id ? '立即修改' : '立即创建' }}</el-button>
         </el-form-item>
       </el-form>
     </ElCard>
@@ -69,9 +69,9 @@
 
 <script>
 import { ElCard, ElOption, ElRate, ElSelect, ElMessage } from 'element-plus';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { getFlowerTypes, addFlower } from '../../api/flower';
+import { getFlowerTypes, addFlower, getDetail, updateFlower } from '../../api/flower';
 import { getToken } from '../../utils/auth';
 
 export default {
@@ -86,15 +86,16 @@ export default {
               coverImg: "",
               tag: "",
               type: '',
-              hot: 2,
+              hot: 0,
             },
-            uploadImgServer: 'http://39.108.186.101:3000/api/upload',
+            uploadImgServer: 'http://localhost:3000/api/upload',
             options: [],
             token: getToken(),
             rules: [
 
             ],
         });
+        const id = ref('');
         const router = useRouter();
         const route = useRoute();
         async function init() {
@@ -123,7 +124,39 @@ export default {
           router.replace('/good');
           console.log('添加成功', res);
         }
+        async function submitUpdate() {
+          const data = {
+            ...state.goodForm,
+            stockNum: Number(state.goodForm.stockNum),
+          }
+          const res = await updateFlower(data);
+          ElMessage({
+            message: '更新成功',
+            type: 'success',
+          });
+          console.log(res, '更新成功');
+          router.back();
+        }
+        async function getDetailInfo(){
+          const res = await getDetail(id.value);
+          const result = res.result || {};
+          state.goodForm = { ...result, sell_status: result.lower, stockNum: result.stock || result.stockNum, coverImg: result.imgUrl || result.coverImg };
+          console.log(res, '详情');
+        }
+        
+        function submit() {
+          if (id.value) {
+            submitUpdate();
+          } else {
+            submitAdd();
+          }
+        }
         onMounted(() => {
+          const { id: pid } = route.query;
+          if (pid) {
+            id.value = pid;
+            getDetailInfo();            
+          }
           console.log(state, route.query);
           init();
         });
@@ -132,6 +165,8 @@ export default {
           handleUrlSuccess,
           handleBeforeUpload,
           submitAdd,
+          submit,
+          id,
         };
     },
     components: { ElCard, ElSelect, ElOption, ElRate }
