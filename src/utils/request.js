@@ -42,6 +42,10 @@ service.interceptors.response.use(
     //   })
     // }
     if (response.data.code === 403) {
+      removeToken();
+      removeRoles()
+      removeName()
+      removeAvatar()
       router.push('/login');
       return;
     }

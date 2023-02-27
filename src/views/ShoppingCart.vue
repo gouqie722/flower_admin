@@ -14,7 +14,7 @@
           </template>
         </ElPopconfirm>
         <div style="flex-grow: 1;"></div>
-        <ElButton type="success" :disabled="!selectList.length" :icon="Plus" @click="handleSettlement">结算</ElButton>
+        <ElButton type="success" :disabled="!selectList.length" :icon="Plus" @click="handleSettlement">提交订单</ElButton>
       </div>
     </template>
     <ElTable
@@ -172,7 +172,10 @@ async function handleSettlement() {
   })
   const res = await createOrder({ flowers });
   console.log('创建成功', res);
-  getList();
+  ElMessage.success({ message: '提交成功' });
+  setTimeout(() => {
+    router.push('/order');
+  }, 1500);
 }
 // 初始化
 onMounted(() => {

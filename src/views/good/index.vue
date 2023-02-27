@@ -85,45 +85,45 @@ import { useRouter } from 'vue-router';
 import { getList, deleteFlower, changeFlowerStatus } from '../../api/flower';
 
 export default {
-    setup() {
-        const list = ref([]);
-        const loading = ref(false);
-        const router = useRouter();
-        async function requestList() {
-            loading.value = true;
-            const res = await getList({});
-            loading.value = false;
-            console.log(res, "列表");
-            list.value = res.list || [];
-        }
-        function handleEdit(id) {
-          console.log(id);
-          router.push('/add?id=' + id);
-        }
-        async function handleDelete(id) {
-          const res = await deleteFlower({ id });
-          console.log('删除成功', res);
-          ElMessage({
-            message: '删除成功',
-            type: 'success',
-          });
-          requestList();
-        }
-        async function handleChangeStatus(id, lower) {
-          const res = await changeFlowerStatus({ lower, id });
-          console.log('状态更改成功', res);
-          ElMessage({
-            message: lower === '01' ? '已上架' : '已下架',
-            type: lower === '01' ? 'success' : 'error',
-          });
-          requestList();
-        }
-        onMounted(() => {
-          requestList();
-        });
-        return { loading, list, handleEdit, handleDelete, handleChangeStatus };
-    },
-    components: { ElCard, ElButton, ElTable }
+  setup() {
+    const list = ref([]);
+    const loading = ref(false);
+    const router = useRouter();
+    async function requestList() {
+      loading.value = true;
+      const res = await getList({});
+      loading.value = false;
+      console.log(res, "列表");
+      list.value = res.list || [];
+    }
+    function handleEdit(id) {
+      console.log(id);
+      router.push('/add?id=' + id);
+    }
+    async function handleDelete(id) {
+      const res = await deleteFlower({ id });
+      console.log('删除成功', res);
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+      });
+      requestList();
+    }
+    async function handleChangeStatus(id, lower) {
+      const res = await changeFlowerStatus({ lower, id });
+      console.log('状态更改成功', res);
+      ElMessage({
+        message: lower === '01' ? '已上架' : '已下架',
+        type: lower === '01' ? 'success' : 'error',
+      });
+      requestList();
+    }
+    onMounted(() => {
+      requestList();
+    });
+    return { loading, list, handleEdit, handleDelete, handleChangeStatus };
+  },
+  components: { ElCard, ElButton, ElTable }
 }
 </script>
 

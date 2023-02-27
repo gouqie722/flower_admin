@@ -55,10 +55,8 @@
         prop="payType"
         label="支付方式"
       >
-        <template #default='scope'>
-          <span v-if="scope.row.payType == 1">微信支付</span>
-          <span v-else-if="scope.row.payType == 2">支付宝支付</span>
-          <span v-else>未知</span>
+        <template>
+          <span>未知</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -71,7 +69,7 @@
       >
         <template #default="scope">
           <el-popconfirm
-            v-if="scope.row.orderStatus == 1"
+            v-if="scope.row.status === '03'"
             title="确定配货完成吗？"
             @confirm="handleConfig(scope.row.orderId)"
             confirm-button-text="确定"
@@ -82,7 +80,7 @@
             </template>
           </el-popconfirm>
           <el-popconfirm
-            v-if="scope.row.orderStatus == 2"
+            v-if="scope.row.status === '01'"
             title="确定出库吗？"
             @confirm="handleSend(scope.row.orderId)"
             confirm-button-text="确定"
@@ -93,7 +91,7 @@
             </template>
           </el-popconfirm>
           <el-popconfirm
-            v-if="!(scope.row.orderStatus == 4 || scope.row.orderStatus < 0)"
+            v-if="scope.row.status === '01' || scope.row.status === '04'"
             title="确定关闭订单吗？"
             @confirm="handleClose(scope.row._id)"
             confirm-button-text="确定"
@@ -161,6 +159,7 @@ async function allStatus() {
 async function handleClose(id) {
   const res = await cancelOrder({ id });
   console.log('取消成功', res);
+  getList();
   console.log(id);
 }
 
