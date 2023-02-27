@@ -31,3 +31,11 @@ export function cancelOrder(data) {
     data
   });
 }
+
+export function deleteOrder(data) {
+  return request({
+    url: '/api/order/delete',
+    method: 'POST',
+    data,
+  })
+}
