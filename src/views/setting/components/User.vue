@@ -52,7 +52,10 @@
         <el-form-item prop="headImg" label="头像">
           <el-upload
             class="avatar-uploader"
-            action="http://39.108.186.101:3000/api/upload"
+            action="http://localhost:3000/api/upload"
+            :headers="{
+              token: token,
+            }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
           >
@@ -75,6 +78,7 @@
 import { ref, reactive, inject, onBeforeMount } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { get_user_list, add_user, get_roles, update_user_info, delete_user_info } from '@/api/user'
+import { getToken } from '../../../utils/auth'
 
 const DateFormat = inject('$DateFormat')
 const dialogFlag = ref(1)
@@ -84,6 +88,7 @@ const formLoading = ref(false)
 const userFormRef = ref(null)
 const roleList = reactive([])
 const tableList = reactive([])
+const token = getToken();
 const userForm = reactive({
   username: '',
   password: '',
@@ -99,7 +104,7 @@ onBeforeMount(() => {
 })
 
 
-function handleUrlSuccess(e) {
+function handleAvatarSuccess(e) {
   console.log('上传成功', e);
   const { filepath } = e.data;
   userForm.headImg = filepath;

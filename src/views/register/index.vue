@@ -24,7 +24,7 @@
         </template>
       </ElInput>
     </div>
-    <ElButton type="primary" @click="submitForm">登录</ElButton>
+    <ElButton type="primary" @click="submitForm">注册</ElButton>
   </div>
 </template>
 
@@ -53,12 +53,12 @@ export default {
       console.log(res, '注册');
       router.replace('/login');
     }
-    async function update() {
-      const res = await update_user_info({ _id: '63da36ae131d15d90326f03a', role: 'admin' });
-      console.log('更新成功', res);
-    }
+    // async function update() {
+    //   const res = await update_user_info({ _id: '63da36ae131d15d90326f03a', role: 'admin' });
+    //   console.log('更新成功', res);
+    // }
     onMounted(() => {
-      update();
+      // update();
     });
     return { username, password, passwordType, passwordLock, switchPass, submitForm };
   },
