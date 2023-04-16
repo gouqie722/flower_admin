@@ -11,6 +11,7 @@
           {{ getRoleName(row.role) }}
         </template>
       </el-table-column>
+      <el-table-column prop="balance" label="余额" />
       <el-table-column prop="phone" label="手机号" min-width="120" />
       <el-table-column prop="introduce" label="介绍" />
       <el-table-column prop="headImg" label="头像">

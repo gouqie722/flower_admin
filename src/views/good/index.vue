@@ -118,10 +118,13 @@ export default {
       });
       requestList();
     }
+    function handleAdd() {
+      router.push('/add');
+    }
     onMounted(() => {
       requestList();
     });
-    return { loading, list, handleEdit, handleDelete, handleChangeStatus };
+    return { loading, list, handleEdit, handleDelete, handleChangeStatus, handleAdd };
   },
   components: { ElCard, ElButton, ElTable }
 }
