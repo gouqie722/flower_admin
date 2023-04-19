@@ -4,6 +4,7 @@ const TokenKey = 'token'
 const RoleKey = 'roles'
 const nameKey = 'name'
 const avatarKey = 'avatar'
+const userIdKey = 'userId'
 
 export function getToken() {
   return localStorage.getItem(TokenKey)
@@ -51,4 +52,12 @@ export function setAvatar(avatar) {
 
 export function removeAvatar() {
   return localStorage.removeItem(avatarKey)
+}
+
+export function getUserId() {
+  return localStorage.getItem(userIdKey);
+}
+
+export function setUserId(id) {
+  return localStorage.setItem(userIdKey, id);
 }

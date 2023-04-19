@@ -39,3 +39,11 @@ export function deleteOrder(data) {
     data,
   })
 }
+
+export function requestPay(data) {
+  return request({
+    url: '/api/order/pay',
+    method: 'POST',
+    data,
+  })
+}

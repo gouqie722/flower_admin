@@ -102,6 +102,7 @@
             </template>
           </el-popconfirm>
           <router-link :to="{ path: '/order_detail', query: { id: scope.row._id }}">订单详情</router-link>
+          <ElButton v-if="state.userId === scope.row.userId && scope.row.status === '00'" type="success" size="small" style="margin-left: 8px;" @click="handlePay(scope.row)">去支付</ElButton>
         </template>
       </el-table-column>
     </el-table>
@@ -120,8 +121,8 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { HomeFilled, Delete } from '@element-plus/icons-vue';
-import { getOrderList, getAllStatus, cancelOrder } from '../api/order';
-
+import { getOrderList, getAllStatus, cancelOrder, requestPay } from '../api/order';
+import { getUserId } from '../utils/auth.js';
 
 const state = reactive({
   loading: false,
@@ -134,6 +135,7 @@ const state = reactive({
   orderStatus: '', // 订单状态
   // 订单状态筛选项默认值
   options: [],
+  userId: getUserId(),
 });
 
 const statusMap = ref({});
@@ -161,6 +163,24 @@ async function handleClose(id) {
   console.log('取消成功', res);
   getList();
   console.log(id);
+}
+
+async function handlePay(info) {
+  const { _id } = info;
+  const result = await requestPay({ id: _id });
+  if (result.code === 100001) {
+    ElMessage({
+      type: 'error',
+      message: result.msg,
+    });
+    return;
+  }
+  ElMessage({
+    type: 'success',
+    message: '支付成功',
+  });
+  getList();
+  console.log(result, '支付');
 }
 
 // 初始化获取订单列表

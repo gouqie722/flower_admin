@@ -8,36 +8,52 @@ import {
   getName,
   setName,
   getAvatar,
-  setAvatar
+  setAvatar,
+  getUserId,
+  setUserId,
 } from '@/utils/auth'
+
+import {
+  SET_TOKEN,
+  SET_AVATAR,
+  SET_INTRODUCTION,
+  SET_NAME,
+  SET_ROLES,
+  SET_USER_ID,
+} from '../user_types.js';
 
 const state = {
   token: getToken(),
   roles: getRoles(),
   name: getName(),
   avatar: getAvatar(),
-  introduction: ''
+  introduction: '',
+  userId: getUserId(),
 }
 
 const mutations = {
-  SET_TOKEN: (state, token) => {
+  [SET_TOKEN]: (state, token) => {
     state.token = token
     setToken(token)
   },
-  SET_ROLES: (state, roles) => {
+  [SET_ROLES]: (state, roles) => {
     state.roles = roles
     setRoles(roles)
   },
-  SET_NAME: (state, name) => {
+  [SET_NAME]: (state, name) => {
     state.name = name
     setName(name)
   },
-  SET_AVATAR: (state, avatar) => {
+  [SET_AVATAR]: (state, avatar) => {
     state.avatar = avatar
     setAvatar(avatar)
   },
-  SET_INTRODUCTION: (state, introduction) => {
+  [SET_INTRODUCTION]: (state, introduction) => {
     state.introduction = introduction
+  },
+  [SET_USER_ID](state, userId) {
+    state.userId = userId;
+    setUserId(userId);
   }
 }
 
@@ -50,11 +66,12 @@ const actions = {
           const { _doc } = res;
           console.log('300 登录', res, _doc);
           if (res.token) {
-            commit('SET_TOKEN', res.token)
-            commit('SET_ROLES', _doc.role)
-            commit('SET_NAME', _doc.username)
-            commit('SET_AVATAR', _doc.headImg)
-            commit('SET_INTRODUCTION', _doc.introduction)
+            commit(SET_TOKEN, res.token)
+            commit(SET_ROLES, _doc.role)
+            commit(SET_NAME, _doc.username)
+            commit(SET_AVATAR, _doc.headImg)
+            commit(SET_INTRODUCTION, _doc.introduction)
+            commit(SET_USER_ID, _doc._id);
             ElMessage({
               type: 'success',
               message: res.message

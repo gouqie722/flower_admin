@@ -114,3 +114,15 @@ export function get_roles(params) {
     params
   })
 }
+
+/**
+ * 用户充值
+ * @param {*} data 
+ */
+export function requestRecharge(data) {
+  return request({
+    url: '/api/user/recharge',
+    method: 'POST',
+    data,
+  });
+}

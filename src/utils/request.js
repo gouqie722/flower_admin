@@ -41,13 +41,16 @@ service.interceptors.response.use(
     //     message: response.data.msg,
     //   })
     // }
-    if (response.data.code === 403) {
+    const { code } = response.data;
+    if (code === 403) {
       removeToken();
       removeRoles()
       removeName()
       removeAvatar()
       router.push('/login');
       return;
+    } else if (code === 100001) {
+      return response.data;
     }
     return response.data.data;
   },

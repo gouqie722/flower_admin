@@ -24,10 +24,11 @@
           {{ DateFormat(row.createTime) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="240">
         <template #default="{ row }">
           <ElButton type="primary" size="small" icon="Edit" @click="showDialog(2, row)">修改</ElButton>
           <ElButton type="danger" size="small" icon="Delete" @click="deleteUser(row)">删除</ElButton>
+          <ElButton type="danger" size="small" icon="Key" bg text @click="handleRecharge(row)">充值</ElButton>
         </template>
       </el-table-column>
     </el-table>
@@ -72,13 +73,32 @@
         </span>
       </template>
     </el-dialog>
+    <ElDialog v-model="rechargeFlag" title="充值">
+      <div>
+        <img :src="rechargeInfo.headImg" width="40" height="40" alt="">
+      </div>
+      <div style="margin: 16px 0;">
+        充值用户: {{ rechargeInfo.username }}
+      </div>
+      <div>
+        充值金额：<ElInputNumber v-model="rechargeValue"></ElInputNumber>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <ElButton @click="rechargeFlag = false">Cancel</ElButton>
+          <ElButton type="primary" @click="handleSubmitRecharge">
+            Confirm
+          </ElButton>
+        </span>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, inject, onBeforeMount } from 'vue'
-import { ElMessageBox, ElMessage } from 'element-plus'
-import { get_user_list, add_user, get_roles, update_user_info, delete_user_info } from '@/api/user'
+import { ElMessageBox, ElMessage, ElButton, ElLoading } from 'element-plus'
+import { get_user_list, add_user, get_roles, update_user_info, delete_user_info, requestRecharge } from '@/api/user'
 import { getToken } from '../../../utils/auth'
 
 const DateFormat = inject('$DateFormat')
@@ -90,6 +110,12 @@ const userFormRef = ref(null)
 const roleList = reactive([])
 const tableList = reactive([])
 const token = getToken();
+
+// 充值
+const rechargeFlag = ref(false);
+const rechargeInfo = ref({});
+const rechargeValue = ref(0);
+
 const userForm = reactive({
   username: '',
   password: '',
@@ -109,6 +135,30 @@ function handleAvatarSuccess(e) {
   console.log('上传成功', e);
   const { filepath } = e.data;
   userForm.headImg = filepath;
+}
+
+function handleRecharge(row) {
+  console.log(row);
+  rechargeInfo.value = row;
+  rechargeFlag.value = true;
+}
+
+async function handleSubmitRecharge() {
+  if (!rechargeValue.value) {
+    ElMessage.error('请输入金额');
+    return;
+  }
+  const loadingInstance1 = ElLoading.service({ fullscreen: true });
+  const { _id } = rechargeInfo.value;
+  const res = await requestRecharge({ _id, number: rechargeValue.value  });
+  loadingInstance1.close();
+  ElMessage({
+    type: 'success',
+    message: '充值成功'
+  });
+  rechargeFlag.value = false;
+  getTableList();
+  console.log(rechargeValue, res);
 }
 
 /**
@@ -180,7 +230,7 @@ const addOrUpdateUser = () => {
     update_user_info({ ...userForm })
       .then((res) => {
         console.log('更新成功', res);
-        getTableList()
+        getTableList();
         dialogVisible.value = false
       })
       .finally(() => {
