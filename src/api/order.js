@@ -47,3 +47,9 @@ export function requestPay(data) {
     data,
   })
 }
+
+export function getOrderDetail({ id }) {
+  return request({
+    url: '/api/order/detail/' + id,
+  })
+}

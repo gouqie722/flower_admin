@@ -8,7 +8,7 @@
           </div>
         </template>
         <div>
-          {{ state.data.orderStatusString }}
+          {{ statusMap[state.data.status] }}
         </div>
       </ElCard>
       <ElCard class="data-item" shadow="hover">
@@ -18,7 +18,7 @@
           </div>
         </template>
         <div>
-          {{ state.data.createTime }}
+          {{ DateFormat(state.data.createTime) }}
         </div>
       </ElCard>
       <ElCard class="data-item" shadow="hover">
@@ -41,20 +41,20 @@
         label="商品图片"
       >
         <template #default="scope">
-          <img style="width: 100px" :key="scope.row.goodsId" :src="$filters.prefix(scope.row.goodsCoverImg)" alt="商品主图">
+          <img style="width: 100px" :key="scope.row._id" :src="scope.row.coverImg" alt="商品主图">
         </template>
       </ElTableColumn>
       <ElTableColumn
-        prop="goodsId"
+        prop="number"
         label="商品编号"
       >
       </ElTableColumn>
       <ElTableColumn
-        prop="goodsName"
+        prop="name"
         label="商品名"
       ></ElTableColumn>
       <ElTableColumn
-        prop="goodsCount"
+        prop="num"
         label="商品数量"
       >
       </ElTableColumn>
@@ -68,17 +68,46 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { getOrderDetail, getAllStatus } from '../api/order.js';
+import { getBatch } from '../api/flower.js';
 
 const route = useRoute();
-const { id } = route.query
+const { id } = route.query;
+const DateFormat = inject('$DateFormat');
+const statusMap = ref({});
+
 const state = reactive({
   data: {},
   tableData: []
-})
+});
+
+async function allStatus() {
+  const res = await getAllStatus();
+  const { list } = res;
+  const map = {};
+  list.forEach(item => {
+    map[item.type] = item.v;
+  });
+  statusMap.value = map;
+}
+
+async function requestDetail() {
+  const res = await getOrderDetail({ id });
+  const { flowers } = res;
+  const flowerIds = flowers.map(item => item.id);
+  const batchRes = await getBatch({ list: JSON.stringify(flowerIds) });
+  const { list } = batchRes;
+  state.data = res;
+  state.tableData = list.map((item, index)=> ({ ...item, num: flowers[index].num, sellingPrice: flowers[index].num * item.price }));
+  console.log(res, flowerIds, list);
+}
 onMounted(() => {
-})
+  requestDetail();
+  allStatus();
+  console.log(id, 'id');
+});
 </script>
 
 <style scoped>

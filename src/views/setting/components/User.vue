@@ -101,7 +101,7 @@ import { ElMessageBox, ElMessage, ElButton, ElLoading } from 'element-plus'
 import { get_user_list, add_user, get_roles, update_user_info, delete_user_info, requestRecharge } from '@/api/user'
 import { getToken } from '../../../utils/auth'
 
-const DateFormat = inject('$DateFormat')
+const DateFormat = inject('$DateFormat');
 const dialogFlag = ref(1)
 const dialogVisible = ref(false)
 const tabelLoading = ref(false)

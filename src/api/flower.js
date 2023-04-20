@@ -78,3 +78,15 @@ export function changeFlowerStatus(data) {
     data,
   });
 }
+
+/**
+ * 批量获取
+ * @param {*} data 
+ * @returns 
+ */
+export function getBatch(data) {
+  return request({
+    url: '/api/flower/batch',
+    params: data,
+  })
+}
