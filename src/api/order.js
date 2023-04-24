@@ -53,3 +53,27 @@ export function getOrderDetail({ id }) {
     url: '/api/order/detail/' + id,
   })
 }
+
+export function requestUpdate(data) {
+  return request({
+    url: '/api/order/update',
+    data,
+    method: 'POST'
+  });
+}
+
+export function requestShipped(data) {
+  return request({
+    url: '/api/order/shipped',
+    method: 'POST',
+    data,
+  });
+}
+
+export function requestSign(data) {
+  return request({
+    url: '/api/order/sign',
+    method: 'POST',
+    data
+  })
+}

@@ -68,21 +68,21 @@
         label="操作"
       >
         <template #default="scope">
-          <el-popconfirm
+          <!-- <el-popconfirm
             v-if="scope.row.status === '03'"
             title="确定配货完成吗？"
-            @confirm="handleConfig(scope.row.orderId)"
+            @confirm="handleConfig(scope.row._id)"
             confirm-button-text="确定"
             cancel-button-text="取消"
           >
             <template #reference>
               <a style="cursor: pointer; margin-right: 10px">配货完成</a>
             </template>
-          </el-popconfirm>
+          </el-popconfirm> -->
           <el-popconfirm
             v-if="scope.row.status === '01'"
             title="确定出库吗？"
-            @confirm="handleSend(scope.row.orderId)"
+            @confirm="handleSend(scope.row._id)"
             confirm-button-text="确定"
             cancel-button-text="取消"
           >
@@ -90,8 +90,13 @@
               <a style="cursor: pointer; margin-right: 10px">出库</a>
             </template>
           </el-popconfirm>
+          <!-- 已发货 -->
+          <div class="shipped" v-if="scope.row.status === '03'">
+            <ElButton type="success" link @click="handleSign(scope.row._id)">签收</ElButton>(tips: 已发货)
+          </div>
+          <span class="order_success" v-if="scope.row.status === '04'">订单已完成</span>
           <el-popconfirm
-            v-if="scope.row.status === '01' || scope.row.status === '04'"
+            v-if="scope.row.status === '01'"
             title="确定关闭订单吗？"
             @confirm="handleClose(scope.row._id)"
             confirm-button-text="确定"
@@ -121,7 +126,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { HomeFilled, Delete } from '@element-plus/icons-vue';
-import { getOrderList, getAllStatus, cancelOrder, requestPay } from '../api/order';
+import { getOrderList, getAllStatus, cancelOrder, requestPay, requestShipped, requestSign } from '../api/order';
 import { getUserId } from '../utils/auth.js';
 
 const state = reactive({
@@ -161,8 +166,29 @@ async function allStatus() {
 async function handleClose(id) {
   const res = await cancelOrder({ id });
   console.log('取消成功', res);
+  ElMessage({
+    type: 'success',
+    message: '订单已关闭',
+  });
   getList();
   console.log(id);
+}
+
+async function handleSend(id) {
+  console.log(id);
+  const res = await requestShipped({ id });
+  console.log(res, '出库');
+  getList();
+}
+
+async function handleSign(id) {
+  const result = await requestSign({ id });
+  console.log('订单已完成', result);
+  ElMessage({
+    type: 'success',
+    message: '订单已完成',
+  });
+  getList();
 }
 
 async function handlePay(info) {

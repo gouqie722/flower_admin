@@ -42,6 +42,13 @@ service.interceptors.response.use(
     //   })
     // }
     const { code } = response.data;
+    if (code === 500) {
+      ElMessage({
+        type: 'error',
+        message: response.data.msg,
+      });
+      return {};
+    }
     if (code === 403) {
       removeToken();
       removeRoles()
